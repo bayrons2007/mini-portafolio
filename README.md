@@ -111,8 +111,11 @@ mini-portafolio/
 
 ## Dificultades y soluciones
 
-- Tuve problemas porque algunos nombres de archivos no coincidían con sus importaciones. Lo solucioné haciendo coincidir las mayúsculas y minúsculas.
+- Tuve problemas porque algunos nombres de archivos no coincidían con sus importaciones.
+Lo solucioné haciendo coincidir las mayúsculas y minúsculas.
 
-- La primera propuesta de la IA no incluía todos los bloques de la referencia visual. Revisé la pauta y adapté el diseño y el contenido.
+- La primera propuesta de la IA no incluía todos los bloques de la referencia visual.
+Revisé la pauta y adapté el diseño y el contenido.
 
-- Vite no encontraba React Router. Lo solucioné instalando `react-router-dom` en la carpeta del proyecto.
+- Vite no encontraba React Router. Lo solucioné
+instalando `react-router-dom` en la carpeta del proyecto.
