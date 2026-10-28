@@ -1,0 +1,1434 @@
+# Uso de inteligencia artificial
+
+## 1. IA usada
+Utilicé ChatGPT con el plan Plus como apoyo 
+para desarrollar el mini portafolio de React solicitado en la evaluación.
+
+## 2. Modelo
+El modelo utilizado, según el nombre indicado en la aplicación, fue GPT-6A-Astra Medio.
+
+## 3. Prompts realizados
+Revisar las instrucciones y los requerimientos de la evaluación para entender qué debía construir.
+
+Ayudarme a comenzar el proyecto desde cero con React y Vite, después de los problemas con la organización inicial.
+
+Guiarme para crear las cinco páginas: Inicio, Sobre mí, Habilidades, Proyectos y Contacto, junto con un menú de navegación usando React Router.
+
+Ayudarme a solucionar el error que impedía importar react-router-dom.
+
+Continuar más rápido con las partes restantes del portafolio.
+
+Aclarar si podía eliminar App.css, porque los estilos estaban en index.css.
+
+ya entonces dame las bases para rellenar cada uno por mi cuenta y ya.
+
+dame el diseño acorde a la imagen yo me encargo de la info. 
+
+## 4. Outputs
+Ahora empecemos con las cinco páginas y el menú. Deja la terminal con npm run dev funcionando: los cambios se verán al guardar.
+
+En VS Code, dentro de src, crea dos carpetas:
+- components
+- pages
+1. Crea las cinco páginas
+
+Dentro de src/pages, crea estos archivos:
+
+Inicio.jsx
+function Inicio() {
+  return (
+    <section>
+      <h1>Hola, soy Bayron Salgado</h1>
+      <p>Soy estudiante de Ingeniería Civil Informática.</p>
+      <p>Te invito a conocer mis habilidades y proyectos.</p>
+    </section>
+  );
+}
+
+export default Inicio;
+
+SobreMi.jsx
+function SobreMi() {
+  return (
+    <section>
+      <h1>Sobre mí</h1>
+      <p>
+        Estudio Ingeniería Civil Informática y estoy aprendiendo
+        a desarrollar aplicaciones web con React.
+      </p>
+    </section>
+  );
+}
+
+export default SobreMi;
+
+Habilidades.jsx
+function Habilidades() {
+  return (
+    <section>
+      <h1>Habilidades</h1>
+      <p>Aquí presentaré las herramientas que manejo y mi nivel.</p>
+    </section>
+  );
+}
+
+export default Habilidades;
+
+Proyectos.jsx
+function Proyectos() {
+  return (
+    <section>
+      <h1>Proyectos</h1>
+      <p>Aquí presentaré mis trabajos.</p>
+    </section>
+  );
+}
+
+export default Proyectos;
+
+Contacto.jsx
+function Contacto() {
+  return (
+    <section>
+      <h1>Contacto</h1>
+      <p>Aquí estará mi formulario de contacto.</p>
+    </section>
+  );
+}
+
+export default Contacto;
+
+Los textos de Habilidades, Proyectos y Contacto son temporales; los completaremos después.
+
+2. Crea el menú en src/components/Header.jsx
+import { NavLink } from "react-router-dom";
+
+function Header() {
+  return (
+    <header>
+      <nav>
+        <NavLink to="/">Inicio</NavLink>{" "}
+        <NavLink to="/sobre-mi">Sobre mí</NavLink>{" "}
+        <NavLink to="/habilidades">Habilidades</NavLink>{" "}
+        <NavLink to="/proyectos">Proyectos</NavLink>{" "}
+        <NavLink to="/contacto">Contacto</NavLink>
+      </nav>
+    </header>
+  );
+}
+
+export default Header;
+
+NavLink permite cambiar de página sin recargar el sitio. La propiedad to indica la dirección de destino. Los {" "} agregan espacios entre los enlaces mientras todavía no tenemos estilos.
+
+3. Reemplaza el contenido de src/App.jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Header from "./components/Header";
+
+import Inicio from "./pages/Inicio";
+import SobreMi from "./pages/SobreMi";
+import Habilidades from "./pages/Habilidades";
+import Proyectos from "./pages/Proyectos";
+import Contacto from "./pages/Contacto";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Header />
+
+      <main>
+        <Routes>
+          <Route path="/" element={<Inicio />} />
+          <Route path="/sobre-mi" element={<SobreMi />} />
+          <Route path="/habilidades" element={<Habilidades />} />
+          <Route path="/proyectos" element={<Proyectos />} />
+          <Route path="/contacto" element={<Contacto />} />
+        </Routes>
+      </main>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+
+Aquí:
+- BrowserRouter habilita la navegación.
+- Routes agrupa las rutas.
+- Cada Route relaciona una dirección (path) con una página (element).
+- Header está fuera de Routes, por eso el menú aparece en todas las páginas.
+Guarda todos los archivos y prueba los cinco enlaces. Cada uno debería cambiar el título y la dirección en el navegador. Con eso tendremos 
+lista la navegación para seguir con el footer, los proyectos y el formulario.
+
+Vamos a completar el footer, las tarjetas de proyectos, el formulario y los estilos de una vez. Mantén los archivos que ya creamos y realiza estos cambios.
+
+1. Crea src/components/Footer.jsx
+
+Recibe tu nombre mediante props y calcula el año automáticamente.
+function Footer({ nombre }) {
+  return (
+    <footer>
+      <p>© {new Date().getFullYear()} — {nombre}</p>
+    </footer>
+  );
+}
+
+export default Footer;
+
+2. Crea src/components/Layout.jsx
+
+Este componente mantiene el menú y el footer en todas las páginas. Outlet muestra la página correspondiente a la ruta actual.
+import { Outlet } from "react-router-dom";
+import Header from "./Header";
+import Footer from "./Footer";
+
+function Layout() {
+  return (
+    <>
+      <Header />
+
+      <main className="contenedor">
+        <Outlet />
+      </main>
+
+      <Footer nombre="Bayron Salgado" />
+    </>
+  );
+}
+
+export default Layout;
+
+3. Reemplaza src/App.jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Layout from "./components/Layout";
+import Inicio from "./pages/Inicio";
+import SobreMi from "./pages/SobreMi";
+import Habilidades from "./pages/Habilidades";
+import Proyectos from "./pages/Proyectos";
+import Contacto from "./pages/Contacto";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Inicio />} />
+          <Route path="/sobre-mi" element={<SobreMi />} />
+          <Route path="/habilidades" element={<Habilidades />} />
+          <Route path="/proyectos" element={<Proyectos />} />
+          <Route path="/contacto" element={<Contacto />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+
+4. Crea src/components/TarjetaProyecto.jsx
+
+Las props permiten reutilizar la misma tarjeta con distintos datos.
+function TarjetaProyecto({ titulo, descripcion, enlace }) {
+  return (
+    <article className="tarjeta">
+      <h2>{titulo}</h2>
+      <p>{descripcion}</p>
+
+      {enlace && (
+        <a href={enlace} target="_blank" rel="noopener noreferrer">
+          Ver repositorio
+        </a>
+      )}
+    </article>
+  );
+}
+
+export default TarjetaProyecto;
+
+5. Reemplaza src/pages/Proyectos.jsx
+
+Por ahora incluimos el proyecto que sí conocemos. Para cumplir la evaluación falta agregar otro trabajo real tuyo; no pongamos uno inventado.
+import TarjetaProyecto from "../components/TarjetaProyecto";
+
+function Proyectos() {
+  return (
+    <section>
+      <h1>Mis proyectos</h1>
+      <p>Estos son algunos trabajos que he desarrollado.</p>
+
+      <div className="proyectos">
+        <TarjetaProyecto
+          titulo="Mini portafolio personal"
+          descripcion="Sitio desarrollado con React. Incluye navegación entre páginas, componentes reutilizables y un formulario de contacto."
+          enlace="https://github.com/bayrons2007/mini-portafolio"
+        />
+      </div>
+    </section>
+  );
+}
+
+export default Proyectos;
+
+6. Reemplaza src/pages/Habilidades.jsx
+
+Estos niveles son una propuesta inicial: ajústalos si alguno no corresponde a lo que sabes.
+function Habilidades() {
+  return (
+    <section>
+      <h1>Mis habilidades</h1>
+      <p>Actualmente estoy aprendiendo desarrollo web.</p>
+
+      <ul className="habilidades">
+        <li>HTML — Básico</li>
+        <li>CSS — Básico</li>
+        <li>JavaScript — Básico</li>
+        <li>React — Básico, en aprendizaje</li>
+        <li>Git y GitHub — Básico</li>
+      </ul>
+    </section>
+  );
+}
+
+export default Habilidades;
+
+7. Crea src/components/FormularioContacto.jsx
+
+useState guarda los campos, los errores y la confirmación. El envío es una demostración local: no manda correos.
+import { useState } from "react";
+
+function FormularioContacto() {
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [errores, setErrores] = useState({});
+  const [confirmacion, setConfirmacion] = useState("");
+
+  function manejarEnvio(evento) {
+    evento.preventDefault();
+    setConfirmacion("");
+
+    const nuevosErrores = {};
+
+    if (nombre.trim() === "") {
+      nuevosErrores.nombre = "Ingresa tu nombre.";
+    }
+
+    if (correo.trim() === "") {
+      nuevosErrores.correo = "Ingresa tu correo.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.trim())) {
+      nuevosErrores.correo = "Ingresa un correo válido.";
+    }
+
+    if (mensaje.trim() === "") {
+      nuevosErrores.mensaje = "Escribe un mensaje.";
+    }
+
+    setErrores(nuevosErrores);
+
+    if (Object.keys(nuevosErrores).length === 0) {
+      setConfirmacion(
+        `Gracias, ${nombre.trim()}. El formulario se completó correctamente. Este envío es de prueba y no envía correos.`
+      );
+
+      setNombre("");
+      setCorreo("");
+      setMensaje("");
+    }
+  }
+
+  return (
+    <form onSubmit={manejarEnvio} noValidate>
+      <div className="campo">
+        <label htmlFor="nombre">Nombre</label>
+        <input
+          id="nombre"
+          type="text"
+          autoComplete="name"
+          required
+          value={nombre}
+          onChange={(evento) => {
+            setNombre(evento.target.value);
+            setConfirmacion("");
+          }}
+          aria-invalid={Boolean(errores.nombre)}
+          aria-describedby={errores.nombre ? "error-nombre" : undefined}
+        />
+        {errores.nombre && (
+          <p id="error-nombre" className="error" role="alert">
+            {errores.nombre}
+          </p>
+        )}
+      </div>
+
+      <div className="campo">
+        <label htmlFor="correo">Correo electrónico</label>
+        <input
+          id="correo"
+          type="email"
+          autoComplete="email"
+          required
+          value={correo}
+          onChange={(evento) => {
+            setCorreo(evento.target.value);
+            setConfirmacion("");
+          }}
+          aria-invalid={Boolean(errores.correo)}
+          aria-describedby={errores.correo ? "error-correo" : undefined}
+        />
+        {errores.correo && (
+          <p id="error-correo" className="error" role="alert">
+            {errores.correo}
+          </p>
+        )}
+      </div>
+
+      <div className="campo">
+        <label htmlFor="mensaje">Mensaje</label>
+        <textarea
+          id="mensaje"
+          rows={5}
+          required
+          value={mensaje}
+          onChange={(evento) => {
+            setMensaje(evento.target.value);
+            setConfirmacion("");
+          }}
+          aria-invalid={Boolean(errores.mensaje)}
+          aria-describedby={errores.mensaje ? "error-mensaje" : undefined}
+        />
+        {errores.mensaje && (
+          <p id="error-mensaje" className="error" role="alert">
+            {errores.mensaje}
+          </p>
+        )}
+      </div>
+
+      <button type="submit">Enviar mensaje</button>
+
+      {confirmacion && (
+        <p className="confirmacion" role="status">
+          {confirmacion}
+        </p>
+      )}
+    </form>
+  );
+}
+
+export default FormularioContacto;
+
+8. Reemplaza src/pages/Contacto.jsx
+import FormularioContacto from "../components/FormularioContacto";
+
+function Contacto() {
+  return (
+    <section>
+      <h1>Contacto</h1>
+      <p>Completa los campos para probar el formulario.</p>
+      <FormularioContacto />
+    </section>
+  );
+}
+
+export default Contacto;
+
+9. Reemplaza todo src/index.css
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f3f5f9;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: #17243b;
+  padding: 20px;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+nav a:hover,
+nav a.active {
+  background-color: #334d75;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  flex: 1;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.3rem;
+}
+
+.proyectos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.tarjeta,
+form,
+.habilidades {
+  background-color: white;
+  padding: 24px;
+  border: 1px solid #d8e0eb;
+  border-radius: 10px;
+}
+
+.tarjeta a {
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.habilidades {
+  list-style-position: inside;
+}
+
+.habilidades li {
+  padding: 8px 0;
+}
+
+form {
+  max-width: 600px;
+  margin-top: 24px;
+}
+
+.campo {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+input,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1d4ed8;
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1e40af;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #d97706;
+  outline-offset: 3px;
+}
+
+.error {
+  color: #b91c1c;
+  margin: 6px 0 0;
+}
+
+.confirmacion {
+  color: #166534;
+  background-color: #dcfce7;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+footer {
+  padding: 20px;
+  text-align: center;
+  background-color: #17243b;
+  color: white;
+}
+
+Comprueba que src/main.jsx conserve esta línea:
+import "./index.css";
+
+Prueba el formulario vacío, con un correo incorrecto y con todos los datos correctos. Debe mostrar errores en los dos primeros casos y confirmación en el último.
+
+Ya quedaría la parte funcional propuesta. Faltan el segundo proyecto real y los archivos 
+README.md y uso_ia.md. ¿Qué otro trabajo tuyo quieres incluir? Dime el nombre y qué hace; 
+si tiene repositorio, pásame el enlace.
+
+Estas son las bases para completar las cinco páginas con tus propias palabras. Reemplaza los textos entre corchetes; conserva el código que ya tienes.
+
+1. Inicio — Inicio.jsx
+- Nombre: [Tu nombre]
+- Rol: [Qué estudias o a qué te dedicas]
+- Bienvenida: [Una frase invitando a conocer tu portafolio]
+2. Sobre mí — SobreMi.jsx
+
+Puedes desarrollar este esquema:
+Soy [nombre] y estudio [carrera]. Me interesa [área o tema] porque [motivo]. Actualmente estoy aprendiendo [herramientas o conocimientos]. A futuro me gustaría [objetivo personal o profesional].
+
+3. Habilidades — Habilidades.jsx
+
+Incluye solo herramientas que realmente hayas usado:
+- [Lenguaje o herramienta] — [Nivel]
+- [Lenguaje o herramienta] — [Nivel]
+- [Lenguaje o herramienta] — [Nivel]
+Puedes declarar niveles como básico, intermedio o avanzado.
+
+4. Proyectos — Proyectos.jsx
+
+Completa dos o tres proyectos reales. Para cada uno:
+- Título: [Nombre del proyecto]
+- Descripción: [Qué hace y para qué sirve]
+- Tecnologías: [Con qué lo desarrollaste; puedes incluirlo en la descripción]
+- Repositorio: [Enlace, si existe]
+En las tarjetas que ya tienes, rellena estas props:
+<TarjetaProyecto
+  titulo="[Nombre del proyecto]"
+  descripcion="[Qué hace y con qué lo desarrollaste]"
+  enlace="[URL del repositorio]"
+/>
+
+Si un proyecto no tiene repositorio, elimina la línea enlace.
+
+5. Contacto — Contacto.jsx
+- Título: [Por ejemplo: Contacto]
+- Introducción: [Una frase breve que invite a completar el formulario]
+Mantén debajo:
+<FormularioContacto />
+
+El formulario debe conservar nombre, correo, mensaje, validaciones y confirmación. Como no envía correos reales, deja indicado que es una demostración.
+
+Footer — Layout.jsx
+
+Revisa que esta línea tenga tu nombre:
+<Footer nombre="Bayron Salgado" />
+
+El año ya se calcula automáticamente.
+
+Sí. Te dejo el diseño parecido a la referencia y tú completas los textos, niveles e imágenes. Conserva App.jsx, Layout.jsx, Footer.jsx, FormularioContacto.jsx y main.jsx como están.
+
+1. Reemplaza src/components/Header.jsx
+import { NavLink } from "react-router-dom";
+
+function Header() {
+  return (
+    <header className="header">
+      <div className="barra">
+        <NavLink to="/" className="marca">
+          MiPortafolio
+        </NavLink>
+
+        <nav>
+          <NavLink to="/" end>Inicio</NavLink>
+          <NavLink to="/sobre-mi">Sobre mí</NavLink>
+          <NavLink to="/habilidades">Habilidades</NavLink>
+          <NavLink to="/proyectos">Proyectos</NavLink>
+          <NavLink to="/contacto">Contacto</NavLink>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+export default Header;
+
+2. Reemplaza src/pages/Inicio.jsx
+
+Luego puedes poner una imagen en public y escribir su ruta en imagen, por ejemplo "/presentacion.jpg". Mientras tanto, aparece un recuadro.
+import { Link } from "react-router-dom";
+
+function Inicio() {
+  const imagen = "";
+
+  return (
+    <section>
+      <div className="presentacion">
+        <div>
+          <p className="etiqueta">MI PORTAFOLIO PERSONAL</p>
+          <h1>Hola, soy [tu nombre]</h1>
+          <p className="subtitulo">[Tu carrera o rol]</p>
+          <p>
+            [Escribe una bienvenida e invita a conocer tus
+            habilidades y proyectos.]
+          </p>
+
+          <Link to="/proyectos" className="boton">
+            Explorar proyectos →
+          </Link>
+        </div>
+
+        <div className="imagen-presentacion">
+          {imagen ? (
+            <img src={imagen} alt="Presentación personal" />
+          ) : (
+            <span>Tu imagen aquí</span>
+          )}
+        </div>
+      </div>
+
+      <div className="destacados">
+        <article className="destacado">
+          <span className="simbolo" aria-hidden="true">{"</>"}</span>
+          <h2>[Área de interés]</h2>
+        </article>
+
+        <article className="destacado">
+          <span className="simbolo" aria-hidden="true">▣</span>
+          <h2>[Tipo de proyectos]</h2>
+        </article>
+
+        <article className="destacado">
+          <span className="simbolo" aria-hidden="true">↗</span>
+          <h2>[Meta de aprendizaje]</h2>
+        </article>
+
+        <article className="destacado">
+          <span className="simbolo" aria-hidden="true">★</span>
+          <h2>[Una cualidad tuya]</h2>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+export default Inicio;
+
+3. Reemplaza src/pages/SobreMi.jsx
+
+Para tu foto, funciona igual: guárdala en public y cambia foto por su ruta.
+function SobreMi() {
+  const foto = "";
+
+  return (
+    <section>
+      <div className="sobre-presentacion">
+        <div className="foto-personal">
+          {foto ? (
+            <img src={foto} alt="Mi fotografía" />
+          ) : (
+            <span>Tu foto aquí</span>
+          )}
+        </div>
+
+        <div>
+          <p className="etiqueta">CONÓCEME</p>
+          <h1>Sobre mí</h1>
+          <p>[Escribe una presentación breve sobre ti.]</p>
+        </div>
+      </div>
+
+      <div className="bloque">
+        <h2>¿Qué estudio?</h2>
+        <p>[Indica tu carrera, institución y etapa de estudios.]</p>
+      </div>
+
+      <div className="bloque">
+        <h2>¿Qué me interesa?</h2>
+        <ul className="lista">
+          <li>[Primer interés]</li>
+          <li>[Segundo interés]</li>
+          <li>[Tercer interés]</li>
+        </ul>
+      </div>
+
+      <div className="bloque">
+        <h2>¿Hacia dónde quiero ir?</h2>
+        <p>[Explica qué te gustaría aprender o hacer a futuro.]</p>
+      </div>
+    </section>
+  );
+}
+
+export default SobreMi;
+
+4. Reemplaza src/pages/Habilidades.jsx
+
+Edita la lista habilidades. porcentaje acepta un número de 0 a 100; es una autoevaluación. Los ceros son temporales.
+function Habilidades() {
+  const habilidades = [
+    { nombre: "[Tecnología 1]", nivel: "[Nivel]", porcentaje: 0 },
+    { nombre: "[Tecnología 2]", nivel: "[Nivel]", porcentaje: 0 },
+    { nombre: "[Tecnología 3]", nivel: "[Nivel]", porcentaje: 0 },
+    { nombre: "[Tecnología 4]", nivel: "[Nivel]", porcentaje: 0 },
+    { nombre: "[Tecnología 5]", nivel: "[Nivel]", porcentaje: 0 },
+    { nombre: "[Tecnología 6]", nivel: "[Nivel]", porcentaje: 0 },
+  ];
+
+  const herramientas = [
+    "[Herramienta 1]",
+    "[Herramienta 2]",
+    "[Herramienta 3]",
+  ];
+
+  return (
+    <section>
+      <p className="etiqueta">LO QUE ESTOY APRENDIENDO</p>
+      <h1>Habilidades y lenguajes</h1>
+      <p>[Escribe una breve introducción sobre tus conocimientos.]</p>
+
+      <h2>Tecnologías</h2>
+
+      <div className="habilidades-grid">
+        {habilidades.map((habilidad) => (
+          <article className="habilidad" key={habilidad.nombre}>
+            <span className="icono-tecnologia" aria-hidden="true">
+              {"</>"}
+            </span>
+
+            <h3>{habilidad.nombre}</h3>
+            <p>{habilidad.nivel}</p>
+
+            <progress
+              value={habilidad.porcentaje}
+              max="100"
+              aria-label={`Nivel de ${habilidad.nombre}`}
+            />
+
+            <span className="porcentaje">
+              {habilidad.porcentaje}%
+            </span>
+          </article>
+        ))}
+      </div>
+
+      <p className="nota">Niveles estimados mediante autoevaluación.</p>
+
+      <h2>Herramientas</h2>
+
+      <ul className="herramientas">
+        {herramientas.map((herramienta) => (
+          <li key={herramienta}>{herramienta}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export default Habilidades;
+
+5. Reemplaza src/components/TarjetaProyecto.jsx
+
+Ahora admite una imagen. Si no le pasas una, muestra un recuadro.
+function TarjetaProyecto({ titulo, descripcion, enlace, imagen }) {
+  return (
+    <article className="tarjeta-proyecto">
+      <div className="imagen-proyecto">
+        {imagen ? (
+          <img src={imagen} alt={`Vista del proyecto ${titulo}`} />
+        ) : (
+          <span>Imagen del proyecto</span>
+        )}
+      </div>
+
+      <div className="contenido-proyecto">
+        <h2>{titulo}</h2>
+        <p>{descripcion}</p>
+
+        {enlace && (
+          <a
+            className="enlace-proyecto"
+            href={enlace}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ver repositorio ↗
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
+
+export default TarjetaProyecto;
+
+6. Reemplaza src/pages/Proyectos.jsx
+
+Completa las dos tarjetas. En enlace pega la URL; en imagen, una ruta como "/proyecto1.png".
+import TarjetaProyecto from "../components/TarjetaProyecto";
+
+function Proyectos() {
+  return (
+    <section>
+      <p className="etiqueta">MI TRABAJO</p>
+      <h1>Mis proyectos</h1>
+      <p>[Escribe una introducción breve sobre tus trabajos.]</p>
+
+      <div className="proyectos">
+        <TarjetaProyecto
+          titulo="[Nombre del primer proyecto]"
+          descripcion="[Qué hace, para qué sirve y qué tecnologías utilizaste.]"
+          enlace=""
+          imagen=""
+        />
+
+        <TarjetaProyecto
+          titulo="[Nombre del segundo proyecto]"
+          descripcion="[Qué hace, para qué sirve y qué tecnologías utilizaste.]"
+          enlace=""
+          imagen=""
+        />
+      </div>
+    </section>
+  );
+}
+
+export default Proyectos;
+
+7. Reemplaza src/pages/Contacto.jsx
+
+El formulario sigue usando el código que ya tienes.
+import FormularioContacto from "../components/FormularioContacto";
+
+function Contacto() {
+  return (
+    <section className="pagina-contacto">
+      <p className="etiqueta">HABLEMOS</p>
+      <h1>Contacto</h1>
+      <p>[Escribe una frase invitando a completar el formulario.]</p>
+
+      <FormularioContacto />
+
+      <p className="nota">
+        Formulario de demostración: no envía correos reales.
+      </p>
+    </section>
+  );
+}
+
+export default Contacto;
+
+8. Reemplaza todo src/index.css
+
+Este archivo da formato a las cinco páginas y adapta el diseño a pantallas pequeñas.
+:root {
+  font-family: Arial, sans-serif;
+  color: #243449;
+  background: #ffffff;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+}
+
+h1 {
+  margin: 0 0 18px;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -1px;
+}
+
+h2 {
+  margin: 28px 0 14px;
+  font-size: 1.3rem;
+}
+
+h3 {
+  margin: 14px 0 6px;
+}
+
+p {
+  margin: 0 0 18px;
+}
+
+.header {
+  background: #f0f4f8;
+  border-bottom: 1px solid #dce4ed;
+}
+
+.barra {
+  max-width: 1100px;
+  margin: auto;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.marca {
+  color: #243449;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+nav a {
+  padding: 6px 0;
+  color: #46576b;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.95rem;
+}
+
+nav a:hover,
+nav a.active {
+  color: #243449;
+  border-bottom-color: #405c7a;
+}
+
+.contenedor {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  padding: 48px 24px;
+}
+
+.etiqueta {
+  margin-bottom: 12px;
+  color: #526880;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.subtitulo {
+  font-size: 1.2rem;
+}
+
+.presentacion {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: center;
+  gap: 40px;
+  padding: 44px;
+  background: #e8eef5;
+  border-radius: 14px;
+}
+
+.imagen-presentacion,
+.foto-personal,
+.imagen-proyecto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #53677e;
+  background: #d6e0eb;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.imagen-presentacion {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 300px;
+  justify-self: center;
+}
+
+.boton,
+button {
+  display: inline-block;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 7px;
+  background: #354f6d;
+  color: white;
+  font: inherit;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.boton:hover,
+button:hover {
+  background: #243b55;
+}
+
+.destacados {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+
+.destacado {
+  padding: 26px 16px;
+  border: 1px solid #e0e7ef;
+  border-radius: 10px;
+  background: #f7f9fc;
+  text-align: center;
+}
+
+.simbolo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #405c7a;
+}
+
+.destacado h2 {
+  margin: 14px 0 0;
+  font-size: 1rem;
+}
+
+.sobre-presentacion {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.foto-personal {
+  width: 190px;
+  aspect-ratio: 1;
+}
+
+.bloque {
+  margin-top: 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e0e7ef;
+}
+
+.bloque h2 {
+  margin-top: 0;
+}
+
+.lista {
+  padding-left: 22px;
+}
+
+.lista li {
+  margin-bottom: 8px;
+}
+
+.habilidades-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.habilidad {
+  padding: 24px;
+  border: 1px solid #dce4ed;
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+.icono-tecnologia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #e8eef5;
+  color: #405c7a;
+  font-weight: bold;
+}
+
+.habilidad p {
+  color: #526880;
+  font-size: 0.9rem;
+}
+
+progress {
+  display: block;
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  border: none;
+  border-radius: 10px;
+  background: #e1e8f0;
+  accent-color: #405c7a;
+}
+
+progress::-webkit-progress-bar {
+  background: #e1e8f0;
+}
+
+progress::-webkit-progress-value {
+  background: #405c7a;
+  border-radius: 10px;
+}
+
+progress::-moz-progress-bar {
+  background: #405c7a;
+  border-radius: 10px;
+}
+
+.porcentaje {
+  display: block;
+  margin-top: 6px;
+  text-align: right;
+  font-size: 0.8rem;
+}
+
+.herramientas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.herramientas li {
+  padding: 8px 18px;
+  border-radius: 20px;
+  background: #e8eef5;
+  font-size: 0.9rem;
+}
+
+.proyectos {
+  display: grid;
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.tarjeta-proyecto {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 28px;
+  padding: 22px;
+  border: 1px solid #dce4ed;
+  border-radius: 12px;
+}
+
+.imagen-proyecto {
+  min-height: 180px;
+}
+
+.contenido-proyecto {
+  min-width: 0;
+  align-self: center;
+  overflow-wrap: anywhere;
+}
+
+.contenido-proyecto h2 {
+  margin-top: 0;
+}
+
+.enlace-proyecto {
+  color: #34597e;
+  font-weight: bold;
+  text-underline-offset: 4px;
+}
+
+.pagina-contacto {
+  max-width: 680px;
+  margin: auto;
+}
+
+form {
+  margin-top: 28px;
+  padding: 30px;
+  border: 1px solid #dce4ed;
+  border-radius: 12px;
+  background: #f0f4f8;
+}
+
+.campo {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+input,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #a8b8c9;
+  border-radius: 6px;
+  background: white;
+  color: #243449;
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #b76b16;
+  outline-offset: 4px;
+}
+
+.error {
+  margin: 6px 0 0;
+  color: #a51d26;
+  font-size: 0.9rem;
+}
+
+.confirmacion {
+  margin: 20px 0 0;
+  padding: 14px;
+  border-radius: 6px;
+  color: #16532f;
+  background: #dff3e6;
+}
+
+.nota {
+  margin-top: 16px;
+  color: #526880;
+  font-size: 0.85rem;
+}
+
+footer {
+  padding: 22px;
+  background: #e8eef5;
+  border-top: 1px solid #dce4ed;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+footer p {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .barra {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  nav {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .presentacion {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+
+  .destacados,
+  .habilidades-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sobre-presentacion,
+  .tarjeta-proyecto {
+    grid-template-columns: 1fr;
+  }
+
+  .imagen-proyecto {
+    height: 220px;
+  }
+}
+
+@media (max-width: 420px) {
+  .contenedor {
+    padding: 30px 16px;
+  }
+
+  .destacados,
+  .habilidades-grid {
+    grid-template-columns: 1fr;
+  }
+
+  form {
+    padding: 20px;
+  }
+}
+
+Con eso tienes la base visual. Rellena los textos entre corchetes, cambia los niveles y agrega tus imágenes. Los nombres de archivos y sus mayúsculas deben coincidir con los imports.
+
+## 5. Ajustes
+remplace los nombres ya que no copie y pegue y al tener en minuscula todos me dio error y tuve
+que terminar usando los que la IA me sugirió.
+
+ademas de tocar mano en el diseño sugerido para que sea mas similar a la imagen del 
+profesor 
+
+ademas de unir los proyectos de mi portafolio anterior a este, copie y pegue las carpetas
+y en proyectos le puse las rutas de las carpetas para que se abran al darle al boton 
+
+realizar toda la informacion y diseño por mi cuenta del portafolio, cambiando el css para
+darle mi estilo 
+
+tambien actualice TarjetaProyecto para que no abra mas pestañas y solo quitando el 
+target"_blank"
+
+cree una carpeta de imagenes en public para las capturas de los proyectos y la imagen
+inicio 
+
+## 6. Reflexión crítica
+mi reflexion es que gracias a mi portafolio anterior fui capaz de hacer varias cosas a la
+hora de realizar el portafolio sin necesidad de ia solo recordando lo que aprendi antes
+ademas este tipo de trabajo uno aprende bastante confio que para una 3 entrega pueda llegar 
+a realizarlo con menos ia en estas cosas y poder hacer todo de mejor manera. me dio 
+problemas con los archivos de typescript pero ya le entendi de mejor manera y fue un gran
+aprendizaje. 
